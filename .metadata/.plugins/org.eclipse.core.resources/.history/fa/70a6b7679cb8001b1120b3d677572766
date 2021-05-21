@@ -1,0 +1,33 @@
+package com.project.mentoring.command;
+
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.project.mentoring.dao.AdminAnnouncementDao;
+import com.project.mentoring.dto.AdminAnnouncementDto;
+
+
+public class AdminAnnouncementInsertCommand implements IntCommand {
+
+	@Override
+	public int execute(HttpServletRequest request, HttpServletResponse response) {
+		
+		String noticepk = request.getParameter("noticepk");
+		String admin_adminpk = request.getParameter("admin_adminpk");
+		String noticetitle = request.getParameter("noticetitle");
+		String noticetext = request.getParameter("noticetext");
+		String indate = request.getParameter("indate");
+		String outdate = request.getParameter("outdate");
+
+		
+
+		AdminAnnouncementDao adminAnnouncementInsertDao = new AdminAnnouncementDao();
+		int adminAnnouncementInsertResult = adminAnnouncementInsertDao.adminAnnouncementInsert(noticepk,admin_adminpk,noticetitle,noticetext,indate,outdate);
+
+		return adminAnnouncementInsertResult;
+	}
+
+}

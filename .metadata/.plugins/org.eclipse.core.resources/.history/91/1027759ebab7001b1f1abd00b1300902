@@ -1,0 +1,5 @@
+package com.project.mentoring.command;
+
+public class AdminAnnouncementContent {
+
+}

@@ -1,0 +1,84 @@
+package com.project.mentoring.dao;
+
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import com.project.mentoring.dto.AdminAnnouncementDto;
+
+
+import java.sql.*;
+import java.util.ArrayList;
+
+public class AdminAnnouncementDao {
+
+	DataSource dataSource;
+
+	public AdminAnnouncementDao() {
+		
+		
+		try {
+			Context context = new InitialContext();
+			dataSource = (DataSource) context.lookup("java:comp/env/jdbc/mentoringdb");
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+		}
+	}
+	
+	
+	/* Help Page 에 notice의 list 를 
+	 * 
+	 *  글번호, 작성자 , 글제목, 글내용, 작성날짜 보여주기 */
+	public ArrayList<AdminAnnouncementDto > noticeList(){
+		ArrayList<AdminAnnouncementDto> adminAnnouncementDto = new ArrayList<AdminAnnouncementDto>();
+		Connection connection = null;
+		PreparedStatement prepareStatement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = dataSource.getConnection();
+			
+			String noticeListQuery = "select noticePk, admin_adminpk, noticetitle, noticetext, indate , outdate from notice";
+			prepareStatement = connection.prepareStatement(noticeListQuery);
+			resultSet = prepareStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				
+				String noticePk = resultSet.getString("noticePk");
+				String admin_adminpk = resultSet.getString("admin_adminpk");
+				String noticetitle = resultSet.getString("noticetitle");
+				String noticetext = resultSet.getString("noticetext");
+				Timestamp indate = resultSet.getTimestamp("indate");
+				Timestamp outdate = resultSet.getTimestamp("outdate");
+				
+				AdminAnnouncementDto adminAnnouncementDto = new AdminAnnouncementDto(noticePk, admin_adminpk, noticetitle, noticetext, indate, outdate);
+				adminAnnouncementDto.add(adminAnnouncementDto);				
+			}
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+			
+			
+		}finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(prepareStatement != null) prepareStatement.close();
+				if(connection != null) connection.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+		
+		return adminAnnouncementDto;
+	}
+	
+	
+	
+	
+	
+}//--end Line
+

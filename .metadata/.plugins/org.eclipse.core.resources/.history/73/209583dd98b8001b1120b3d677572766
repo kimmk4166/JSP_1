@@ -1,0 +1,25 @@
+package com.project.mentoring.command;
+
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.project.mentoring.dao.AdminAnnouncementDao;
+import com.project.mentoring.dto.AdminAnnouncementDto;
+
+
+public class AdminAnnouncementInsertCommand implements IntCommand {
+
+	@Override
+	public int execute(HttpServletRequest request, HttpServletResponse response) {
+		
+		String noticepk = request.getParameter("noticepk");
+		
+
+		AdminAnnouncementDao adminAnnouncementDao = new AdminAnnouncementDao();
+		ArrayList<AdminAnnouncementDto> adminAnnouncementDto = adminAnnouncementDao.adminAnnouncementInsert(noticepk, admin_adminpk, noticetitle, noticetext, indate, outdate);
+		request.setAttribute("subMajorList", adminAnnouncementDto);
+	}
+
+}

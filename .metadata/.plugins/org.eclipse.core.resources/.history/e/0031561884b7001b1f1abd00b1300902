@@ -1,0 +1,5 @@
+package com.project.mentoring.dto;
+
+public class adminAnnouncement {
+
+}

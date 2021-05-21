@@ -1,0 +1,28 @@
+package com.project.mentoring.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.project.mentoring.dao.AdminMajorListDao;
+import com.project.mentoring.dao.AdminSubMajorListDao;
+
+public class AdminPageMajorInsertCommand implements IntCommand {
+
+	@Override
+	public int execute(HttpServletRequest request, HttpServletResponse response) {
+		
+		String MajorName = request.getParameter("majorname");
+		
+		String strMajorPk = request.getParameter("majorpk");
+		
+		
+		int majorPk = Integer.parseInt(strMajorPk);
+		
+		AdminMajorListDao adminMajorInsertDao = new AdminMajorListDao();
+		int adminMajorInsertResult = adminMajorInsertDao.adminMajorInsert(majorPk,MajorName);
+		
+		return adminMajorInsertResult;
+	}
+	}
+
+}

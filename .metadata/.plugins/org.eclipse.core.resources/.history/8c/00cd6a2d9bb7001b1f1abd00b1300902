@@ -1,0 +1,44 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h2>공지사항 출력</h2>
+	<table border="0" >
+		<tr>
+			<th>글번호</th>
+			<th>제목</th>
+			<th>내용</th>
+			<th>작성자</th>
+			<th>작성일</th>
+		</tr>
+				<c:forEach items="${noticeList }" var="noticeDto">
+			<tr>
+				<td>${noticeDto.noticePk }</td>
+				<td>${noticeDto.noticetitle }</td>
+				<td>${noticeDto.noticetext }</td>
+				<td>${noticeDto.admin_adminpk }</td>
+				<td>${noticeDto.indate }</td>
+
+			
+			</tr>		
+		</c:forEach>
+	</table>
+	</table>	
+	
+		<h2>도움말 출력</h2>
+	<table border="0" >
+		<tr>
+			<th>글번호</th>
+			<th>제목</th>
+			<th>내용</th><!-- 내용을 클릭하면 보여지도록  -->
+			<th>작성자</th>
+			<th>작성일</th>
+		</tr>
+	</table>
+</body>
+</html>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.AdminAnnouncementCommand"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletResponse"/>
+    <fullyQualifiedTypeName name="javax.servlet.http.HttpServletRequest"/>
+    <fullyQualifiedTypeName name="java.util.ArrayList"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.AdminAnnouncementWriteCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.AdminAnnouncementContentCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.dao.AdminAnnouncementDao"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.AdminAnnouncementInsertCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.dto.AdminAnnouncementDto"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.dto.BDto"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.dao.BDao"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.BCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.BListCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.BWriteCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.BContentCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.BModifyCommand"/>
+    <fullyQualifiedTypeName name="com.project.mentoring.command.BDeleteCommand"/>
+</qualifiedTypeNameHistroy>

@@ -1,0 +1,268 @@
+package com.project.mentoring.dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
+
+import com.pagingTest.dto.Dto;
+import com.project.mentoring.dto.BDto;
+
+
+
+public class BDao {
+	DataSource datasource;
+	
+	public BDao() {
+		try {
+			Context context = new InitialContext();
+			datasource=(DataSource) context.lookup("java:comp/env/jdbc/mentoringdb");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	//사용자가 요청한 페이지(offset)와 페이지당 표시할 게시글의 수(limit)을 매개변수로 받는다.
+//	public ArrayList<BDto> list(){
+	public ArrayList<BDto> list(int requestPage, int numOfTuplePerPage){
+		ArrayList<BDto> dtos=new ArrayList<BDto>();
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		ResultSet resultSet=null;
+		// LIMIT {OFFSET}, {LIMIT} -> 쿼리결과중 offset번째부터 limit개의 튜플을 출력  
+		String query = "SELECT * FROM paging ORDER BY no DESC LIMIT ?, ?";
+		//page는 1부터 시작하지만, offset은 0부터 시작.(0~9(10개), 10~19(10개)와같이 offset을 설정해야 하기 때문)	
+		int offset = requestPage - 1;
+		
+		try {
+			connection=datasource.getConnection();
+			preparedStatement=connection.prepareStatement(query);
+//			String query="select noticepk,admin_adminpk,noticetitle,noticetext,indate,outdate from notice";
+			
+			// 0을 나누면 에러가 발생하므로 예외처리
+			if (offset  == 0) {
+				preparedStatement.setInt(1, offset);
+			} else {
+				preparedStatement.setInt(1, offset*numOfTuplePerPage);
+			}
+			preparedStatement.setInt(2, numOfTuplePerPage);
+			resultSet = preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {				
+				int noticepk=resultSet.getInt("noticepk");
+				int admin_adminpk=resultSet.getInt("admin_adminpk");
+				String noticetitle=resultSet.getString("noticetitle");
+				String noticetext=resultSet.getString("noticetext");
+				Timestamp indate=resultSet.getTimestamp("indate");
+				Timestamp outdate=resultSet.getTimestamp("outdate");
+				
+				BDto dto=new BDto(noticepk, admin_adminpk, noticetitle, noticetext, indate, outdate);
+				dtos.add(dto);
+				System.out.println("list-data load success");
+
+			}
+		}catch(Exception e) {
+			System.out.println("list-data load fail");
+			e.printStackTrace();
+		}finally {
+			try {
+				if(resultSet!=null) resultSet.close();
+				if(preparedStatement!=null) preparedStatement.close();
+				if(connection!=null) connection.close();
+				System.out.println("< rs, psmt, conn close success>");
+			}catch(Exception e) {
+				System.out.println("< rs, psmt, conn close Fail>");
+				e.printStackTrace();
+			}
+		}
+		
+		
+		return dtos;
+	}
+	
+	//list에서 사용하는 릴레이션이 가진 튜플의 총 갯수를 리턴한다.
+	public int countTuple() {
+		Connection connection = null;
+		PreparedStatement preparedStatement = null;
+		ResultSet resultSet = null;
+		int count = 0;
+		String query = "SELECT COUNT(*) FROM paging";
+		
+		try {
+			connection = datasource.getConnection();
+			preparedStatement = connection.prepareStatement(query);
+			resultSet = preparedStatement.executeQuery();
+			
+			if(resultSet.next()) {
+				count = resultSet.getInt(1);
+				System.out.println("list-count success");
+			}			
+		} catch (Exception e) {
+			System.out.println("list-count fail");
+			e.printStackTrace();
+		} finally {
+			try {
+				if(resultSet != null) resultSet.close();
+				if(preparedStatement != null) preparedStatement.close();
+				if(connection != null) connection.close();
+				System.out.println("< resultSet, preparedStatement, connection close success>");
+			} catch (Exception e) {
+				System.out.println("< resultSet, preparedStatement, connection close Fail>");
+			}
+		}
+		
+		return count;
+	}
+		
+	
+	
+	
+	
+	
+
+	public void write(String noticetitle,String noticetext) {
+//	public void write(String admin_adminpk, String noticetitle,String noticetext) {
+		
+		int admin_adminpk = 1; //getAttribute("")
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		System.out.println("작성완료");
+		
+		try {
+			connection=datasource.getConnection();
+			
+//			String query="insert into notice (noticetitle,noticetext,indate) values (?,?,now())";
+			String query="insert into notice (admin_adminpk,noticetitle,noticetext,indate) values (?,?,?,now())";
+			preparedStatement=connection.prepareStatement(query);
+			
+
+//			preparedStatement.setString(1, noticetitle);
+//			preparedStatement.setString(2, noticetext);
+
+			preparedStatement.setInt(1, admin_adminpk);
+			preparedStatement.setString(2, noticetitle);
+			preparedStatement.setString(3, noticetext);
+			
+			
+			preparedStatement.executeUpdate();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(preparedStatement!=null) preparedStatement.close();
+				if(connection!=null) connection.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+
+	}
+	
+	public BDto contentView(String Noticepk) {
+		BDto dto=null;
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		ResultSet resultSet=null;
+		
+
+		
+		try {
+			connection=datasource.getConnection();
+			
+			String query="select * from notice where noticepk=?";
+			preparedStatement=connection.prepareStatement(query);
+			preparedStatement.setInt(1, Integer.parseInt(Noticepk));
+			resultSet=preparedStatement.executeQuery();
+			
+			while(resultSet.next()) {
+				int noticepk=resultSet.getInt("noticepk");
+				int admin_adminpk=resultSet.getInt("admin_adminpk");
+				String noticetitle=resultSet.getString("noticetitle");
+				String noticetext=resultSet.getString("noticetext");
+				Timestamp indate=resultSet.getTimestamp("indate");
+				Timestamp outdate=resultSet.getTimestamp("outdate");
+				
+				
+				dto=new BDto(noticepk, admin_adminpk, noticetitle, noticetext, indate, outdate);
+			}
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(resultSet!=null) resultSet.close();
+				if(preparedStatement!=null) preparedStatement.close();
+				if(connection!=null) connection.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}	
+		return dto;
+	}
+	
+
+	public void update(String noticetitle, String noticetext, String noticepk) {
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		System.out.println(noticepk);
+		
+		try {
+			connection=datasource.getConnection();
+			
+
+			String query="update notice set noticetitle=?,noticetext=?,indate=now() where noticepk=?";
+			preparedStatement=connection.prepareStatement(query);
+	
+		
+			preparedStatement.setString(1, noticetitle);
+			preparedStatement.setString(2, noticetext);
+			preparedStatement.setString(3, noticepk);
+			
+			preparedStatement.executeUpdate();
+			System.out.println("update 완료");
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(preparedStatement!=null) preparedStatement.close();
+				if(connection!=null) connection.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public void delete(String noticepk) {
+		Connection connection=null;
+		PreparedStatement preparedStatement=null;
+		
+		try {
+			connection=datasource.getConnection();
+			
+			String query="delete from notice where noticepk=?";
+			preparedStatement=connection.prepareStatement(query);
+			
+			preparedStatement.setString(1, noticepk);
+			preparedStatement.executeUpdate();
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(preparedStatement!=null) preparedStatement.close();
+				if(connection!=null) connection.close();
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	
+	
+}

@@ -1,0 +1,19 @@
+package com.project.mentoring.command;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.project.mentoring.dao.AdminAnnouncementDao;
+import com.project.mentoring.dto.AdminAnnouncementDto;
+
+public class AdminAnnouncementCommand implements Command {
+
+	@Override
+	public void execute(HttpServletRequest request, HttpServletResponse response) {
+		AdminAnnouncementDao adminAnnouncementDaos = new AdminAnnouncementDao();
+		ArrayList<AdminAnnouncementDto> userDto = AdminAnnouncementDao.noticeList();
+		request.setAttribute("noticeList", noticeDto);
+
+	}
+
+}
